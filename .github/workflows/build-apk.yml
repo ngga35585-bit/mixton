@@ -16,7 +16,20 @@ jobs:
 
       - name: Extract MIXTON project
         run: |
-          unzip -o MIXTON-APK-project.zip -d source
+          set -e
+          echo "Searching for MIXTON ZIP..."
+          ls -la
+
+          ZIP_FILE="$(find . -maxdepth 1 -type f -iname 'MIXTON-APK-project.zip*' -print -quit)"
+
+          if [ -z "$ZIP_FILE" ]; then
+            echo "ERROR: MIXTON ZIP archive not found!"
+            exit 1
+          fi
+
+          echo "Found archive: $ZIP_FILE"
+          mkdir -p source
+          unzip -o "$ZIP_FILE" -d source
           cp -a source/. .
           rm -rf source
 
